@@ -4,6 +4,10 @@
 #include <math.h>
 #include "ukf.h"
 #include "tools.h"
+#include "gnuplot_i.hpp"
+
+// To wait for keyboard interaction
+void wait_for_key();
 
 using namespace std;
 
@@ -26,7 +30,8 @@ std::string hasData(std::string s) {
   return "";
 }
 
-int main()
+//int main()
+int main(int argc, char* argv[])
 {
   uWS::Hub h;
 
@@ -167,6 +172,7 @@ int main()
 
   h.onConnection([&h](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req) {
     std::cout << "Connected!!!" << std::endl;
+    
   });
 
   h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws, int code, char *message, size_t length) {
@@ -185,91 +191,34 @@ int main()
     return -1;
   }
   h.run();
+  
+  ///*
+  // Plotting NIS
+  Gnuplot g1("NIS");
+  g1.reset_plot();
+  g1.set_grid();
+  g1.set_style("points").plot_xy(ukf.timestamps_,ukf.low_line_,"NIS - Low bound"); //.plot_xy(ukf.timestamps_,ukf.high_line_,"NIS - High bound").plot_xy(ukf.timestamps_,ukf.NIS_radars_,"NIS - Radar").plot_xy(ukf.timestamps_,ukf.NIS_lasers_,"NIS - Laser");
+  
+  wait_for_key();
+  //*/
+  
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// To wait for keyboard interaction
+void wait_for_key()
+{
+    #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__)  // every keypress registered, also arrow keys
+    cout << endl << "Press any key to continue..." << endl;
+
+    FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+    _getch();
+    #elif defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
+    cout << endl << "Press ENTER to continue..." << endl;
+
+    std::cin.clear();
+    std::cin.ignore(std::cin.rdbuf()->in_avail());
+    std::cin.get();
+    #endif
+    return;
+}

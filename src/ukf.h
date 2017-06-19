@@ -2,14 +2,14 @@
 #define UKF_H
 
 #include "measurement_package.h"
-#include "Eigen/Dense"
 #include <vector>
 #include <string>
 #include <fstream>
+#include "Eigen/Dense"
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
-//using std::vector;
+using std::vector;
 
 class UKF {
 public:
@@ -115,9 +115,9 @@ public:
     void UpdateSensor(MeasurementPackage meas_package);
     
     /**
-    For plotting
+    * Appends values over time to plot sensors NIS
     */
-    //vector<double> timestamps_, line_, NIS_lasers_, NIS_radars_;
+    vector <double> timestamps_, low_line_, high_line_, NIS_lasers_, NIS_radars_;
     
 };
 
